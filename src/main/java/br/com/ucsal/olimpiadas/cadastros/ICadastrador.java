@@ -1,4 +1,4 @@
-package br.com.ucsal.olimpiadas.cadastro;
+package br.com.ucsal.olimpiadas.cadastros;
 
 public interface ICadastrador {
 

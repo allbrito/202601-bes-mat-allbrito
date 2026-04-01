@@ -1,4 +1,4 @@
-package br.com.ucsal.olimpiadas.questao;
+package br.com.ucsal.olimpiadas.entidades.questao;
 
 public abstract class Questao {
 

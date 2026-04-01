@@ -1,4 +1,4 @@
-package br.com.ucsal.olimpiadas;
+package br.com.ucsal.olimpiadas.entidades;
 
 public class Resposta {
 
@@ -20,7 +20,7 @@ public class Resposta {
 		return alternativaMarcada;
 	}
 
-	public boolean isCorreta() {
+	public boolean getCorreta() {
 		return correta;
 	}
 }

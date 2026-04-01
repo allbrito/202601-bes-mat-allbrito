@@ -1,12 +1,11 @@
-package br.com.ucsal.olimpiadas.questao;
+package br.com.ucsal.olimpiadas.entidades.questao;
 
 public class QuestaoMultiplaEscolha extends Questao{
 
-    private String[] alternativas = new String[5];
+    private String[] alternativas;
     private char alternativaCorreta;
 
-
-    public QuestaoMultiplaEscolha(long id, Long provaId, String enunciado, String[] alternativas, char alternativaCorreta) {
+    public QuestaoMultiplaEscolha(long id, long provaId, String enunciado, String[] alternativas, char alternativaCorreta) {
         super(id, provaId, enunciado);
         this.alternativas = alternativas;
         this.alternativaCorreta = alternativaCorreta;
@@ -15,27 +14,18 @@ public class QuestaoMultiplaEscolha extends Questao{
     @Override
     public void exibir() {
         System.out.println(enunciado);
-        for(String alt: alternativas)
+        for (var alt: alternativas)
             System.out.println(alt);
     }
 
     @Override
     public boolean validarResposta(String resposta) {
-        if(resposta==null || resposta.isEmpty())
+        if(resposta.isBlank())
             return false;
         try{
             return Character.toUpperCase(resposta.charAt(0)) == alternativaCorreta;
         } catch (Exception e) {
             return false;
         }
-
-    }
-
-    public static char normalizar(char c) {
-        char up = Character.toUpperCase(c);
-        if (up < 'A' || up > 'E') {
-            throw new IllegalArgumentException("Alternativa deve estar entre A e E.");
-        }
-        return up;
     }
 }

@@ -1,16 +1,14 @@
-package br.com.ucsal.olimpiadas.questao;
+package br.com.ucsal.olimpiadas.entidades.questao;
 
 public class QuestaoSeed extends Questao{
 
+    private String jogadaCorreta;
     private String fen;
-    private String movimentoCorreto;
 
-    public QuestaoSeed(long id, long provaId) {
-        super(id, provaId, "Questão1: Mate em 1.\n" +
-                "É a vez das brancas.\n" +
-                "Encontre o lance que dá mate imediatamente");
+    public QuestaoSeed(long id, long provaId, String enunciado, String jogadaCorreta) {
+        super(id, provaId, enunciado);
+        this.jogadaCorreta = jogadaCorreta;
         this.fen = "6k1/5ppp/8/8/8/7Q/6PP/6K1 w - - 0 1";
-        this.movimentoCorreto = "Qc8#";
     }
 
     @Override
@@ -23,7 +21,13 @@ public class QuestaoSeed extends Questao{
 
     @Override
     public boolean validarResposta(String resposta) {
-        return movimentoCorreto.equalsIgnoreCase(resposta.trim());
+        if(resposta.isBlank())
+            return false;
+        try{
+            return resposta.equalsIgnoreCase(jogadaCorreta.trim());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private void imprimirTabuleiro(String fen) {
@@ -59,4 +63,3 @@ public class QuestaoSeed extends Questao{
         System.out.println();
     }
 }
-
