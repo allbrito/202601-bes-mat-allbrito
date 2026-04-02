@@ -1,104 +1,58 @@
 [README-original.md](https://github.com/user-attachments/files/26425074/README-original.md)
-# Olimpíadas de Questões
 
-## Visão Geral
+# Sistema de Olimpíada de Questões (Ucsal) — Refatoração SOLID
 
-Sistema de olimpíadas de questões desenvolvido em Java puro, sem frameworks externos. Permite cadastrar participantes, provas e questões, aplicar provas a participantes e visualizar o histórico de tentativas.
+Este projeto consiste na refatoração de um sistema de gestão de provas e participantes, originalmente estruturado em uma única classe procedural, para um modelo orientado a objetos seguindo os princípios de design **SOLID** e padrões de projeto.
 
----
+## 🛠 Principais Mudanças na Arquitetura
 
-## Estrutura de Pacotes
+A principal mudança foi a **descentralização da lógica**. O código original concentrava toda a execução (entrada de dados, validação e regras de negócio) na classe `App`. 
 
-```
-br.com.ucsal.olimpiadas
-├── App.java                          # Ponto de entrada, estado global e menu principal
-├── AplicadorProva.java               # Lógica de aplicação de prova a um participante
-├── ProvaSeed.java                    # Populador de dados iniciais
-│
-├── cadastros/
-│   ├── ICadastrador.java             # Interface de contrato para cadastros
-│   ├── CadastroParticipante.java     # Cadastro de participantes
-│   ├── CadastroProva.java            # Cadastro de provas
-│   └── questao/
-│       ├── CadastroQuestao.java      # Classe abstrata base para cadastro de questões
-│       ├── CadastroQuestaoMultiplaEscolha.java  # Cadastro de questão de múltipla escolha
-│       └── CadastroQuestaoSeed.java  # Cadastro de questão pré-definida (xadrez)
-│
-└── entidades/
-    ├── Participante.java             # Entidade participante
-    ├── Prova.java                    # Entidade prova
-    ├── Resposta.java                 # Entidade resposta de uma questão
-    ├── Seletor.java                  # Utilitário de seleção interativa via console
-    ├── Tentativa.java                # Entidade tentativa + listagem de histórico
-    └── questao/
-        ├── Questao.java              # Classe abstrata base para questões
-        ├── QuestaoMultiplaEscolha.java  # Questão de múltipla escolha (A-E)
-        └── QuestaoSeed.java          # Questão pré-definida de xadrez (mate em 1)
-```
+1.  **Separação em Camadas:** Criamos pacotes específicos para `entidades`, `cadastros` e `logica de execucao`.
+2.  **Polimorfismo de Questões:** A introdução de uma classe abstrata `Questao` permitiu que o sistema suporte diferentes tipos de perguntas (Múltipla Escolha e Xadrez/Seed) sem alterar o motor da prova.
+3.  **Injeção de Dependências:** As classes de serviço deixaram de instanciar suas próprias listas, passando a receber as dependências necessárias via construtor.
+4.  **Template Method:** Padronização do fluxo de criação de objetos através de uma hierarquia de cadastradores.
 
 ---
 
-## Funcionalidades
+## 📐 Aplicação dos Princípios SOLID
 
-- **Cadastrar Participante** — registra um participante pelo nome
-- **Cadastrar Prova** — registra uma prova pelo título
-- **Cadastrar Questão** — adiciona uma questão de múltipla escolha a uma prova existente
-- **Aplicar Prova** — seleciona um participante e uma prova, exibe as questões e registra as respostas
-- **Listar Tentativas** — exibe o histórico de todas as tentativas com a nota obtida
-- **Prova Seed** — ao iniciar, o sistema já carrega automaticamente uma prova de xadrez com uma questão pré-definida
+Abaixo, detalhamos onde cada princípio foi aplicado no código refatorado:
 
----
+### 1. S — Single Responsibility Principle (Princípio da Responsabilidade Única)
+Cada classe agora possui uma única razão para mudar.
+* **Exemplo:** A classe `AplicadorProva` é responsável apenas por orquestrar o fluxo da prova. Ela não sabe como cadastrar um participante ou como imprimir um tabuleiro de xadrez; ela delega essas funções para as classes especialistas.
 
-## Tipos de Questão
+### 2. O — Open/Closed Principle (Princípio Aberto/Fechado)
+O sistema está aberto para extensão, mas fechado para modificação.
+* **Exemplo:** Para adicionar um novo tipo de questão (ex: Verdadeiro ou Falso), não precisamos modificar a classe `App` ou o `AplicadorProva`. Basta criar uma nova classe que estenda `Questao`. O sistema aceitará o novo tipo automaticamente através do polimorfismo.
 
-### Múltipla Escolha
-Questão com 5 alternativas (A a E). O participante responde com a letra correspondente. A validação é feita comparando a inicial da resposta com a alternativa correta, ignorando maiúsculas/minúsculas.
 
-### Questão Seed (Xadrez)
-Questão pré-definida de mate em 1 no xadrez. Exibe o tabuleiro renderizado no console a partir de uma string FEN. A resposta correta é uma jogada em notação algébrica (ex: `Qc8#`).
+### 3. L — Liskov Substitution Principle (Princípio da Substituição de Liskov)
+Subclasses podem substituir suas classes base sem quebrar a aplicação.
+* **Exemplo:** A lista `List<Questao>` no `AplicadorProva` armazena tanto `QuestaoMultiplaEscolha` quanto `QuestaoSeed`. O método `aplicar()` chama `q.exibir()` e `q.validarResposta()` sem precisar saber o tipo real do objeto, e ambos se comportam conforme o esperado.
 
----
+### 4. I — Interface Segregation Principle (Princípio da Segregação de Interface)
+Interfaces específicas são melhores que uma única interface genérica "faz-tudo".
+* **Exemplo:** A interface `ICadastrador` define apenas o contrato essencial para a criação de novos registros, garantindo que as implementações não sejam forçadas a herdar métodos que não utilizam.
 
-## Exemplo de Uso
-
-```
-=== OLIMPÍADA DE QUESTÕES (V1) ===
-1) Cadastrar Participante
-2) Cadastrar Prova
-3) Cadastrar Questão em uma prova
-4) Aplicar Prova (selecionar participante + prova)
-5) Listar tentativas (resumo)
-0) Sair
-> 1
-Nome: João
-Participante Cadastrado. ID: 1
-
-> 4
-Participantes
-  1) João
-
-Escolha o id do participante: 1
-
-Provas:
-  1) Prova Seed
-
-Escolha o id da prova: 1
-
---- Início da Prova ---
-
-Questão #1
----TABULEIRO DE XADREZ---
-...
-Resposta: Qc8#
-
---- Prova Finalizada ---
-Nota: 1/1
-```
+### 5. D — Dependency Inversion Principle (Princípio da Inversão de Dependência)
+Dependa de abstrações, não de implementações concretas.
+* **Exemplo:** As classes de cadastro e aplicação recebem o `Scanner` e as `Listas` via construtor. Isso significa que essas classes não dependem de como os dados são armazenados ou de onde vem a entrada do usuário, facilitando a manutenção e futuros testes unitários.
 
 ---
 
-## Tecnologias
+## 🏗 Padrões de Projeto Utilizados
 
-- Java 21
-- Sem frameworks externos
-- Apenas biblioteca padrão do JDK (`java.util`, `java.util.Scanner`)
+* **Template Method:** Aplicado na classe abstrata `CadastroQuestao`. Ela define o passo a passo do algoritmo de cadastro (selecionar prova -> pedir enunciado), mas deixa o passo `cadastrarEspecifica` para ser implementado pelas subclasses.
+
+* **Expert Pattern (Information Expert):** A lógica de calcular acertos foi movida para dentro da classe `Tentativa`, pois ela possui todas as informações necessárias para realizar esse cálculo, mantendo o encapsulamento.
+
+---
+
+## 🚀 Como Executar
+
+1. Certifique-se de ter o **JDK 25** instalado.
+2. Compile o projeto: `javac br/com/ucsal/olimpiadas/*.java`.
+3. Execute a classe principal: `java br.com.ucsal.olimpiadas.App`.
+4. O sistema iniciará com uma **Seed** (dados pré-carregados) contendo um problema de xadrez para teste imediato.
