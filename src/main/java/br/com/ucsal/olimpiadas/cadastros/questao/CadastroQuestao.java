@@ -26,7 +26,7 @@ public abstract class CadastroQuestao implements ICadastrador {
         if(provaId==null)
             return;
 
-        System.out.println("Enunciado: ");
+        System.out.print("Enunciado: ");
         var enunciado = scanner.nextLine();
 
         Questao questao = cadastrarEspecifica(provaId, enunciado);

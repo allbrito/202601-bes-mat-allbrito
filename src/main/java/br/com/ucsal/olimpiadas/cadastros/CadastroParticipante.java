@@ -22,7 +22,7 @@ public class CadastroParticipante implements ICadastrador{
         var nome = sc.nextLine();
 
         if(nome == null || nome.isBlank()){
-            System.out.println("Nome Obrigatório");
+            System.out.print("Nome Obrigatório");
             return;
         }
         listaParticipantes.add(new Participante(App.proximoParticipanteId++, nome));

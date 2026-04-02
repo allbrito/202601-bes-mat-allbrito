@@ -18,7 +18,7 @@ public class CadastroProva implements ICadastrador{
 
     @Override
     public void cadastrar() {
-        System.out.println("Titulo da prova: ");
+        System.out.print("Titulo da prova: ");
         var titulo = sc.nextLine();
 
         if(titulo == null || titulo.isBlank()){

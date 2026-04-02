@@ -20,11 +20,11 @@ public class CadastroQuestaoMultiplaEscolha extends CadastroQuestao{
 
         for (int i=0; i<5; i++) {
             char letra = (char) ('A' + i);
-            System.out.println("Alternativa " + letra + ": ");
+            System.out.print("Alternativa " + letra + ": ");
             alternativas[i] = letra + ") " + getScanner().nextLine();
         }
 
-        System.out.println("Qual a alternativa correta? (A-E): ");
+        System.out.print("Qual a alternativa correta? (A-E): ");
         char correta;
         try{
             correta = normalizar(getScanner().nextLine().trim().charAt(0));
