@@ -43,7 +43,6 @@ public class AplicadorProva {
             System.out.println("\n--- Prova Finalizada ---");
             System.out.printf("Nota: %d/%d%n", tentativa.calcularTotalAcertos(), tentativa.getListaRespostas().size());
         }
-        return;
     }
 
     private boolean verificar(){

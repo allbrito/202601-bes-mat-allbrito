@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class ProvaSeed {
 
-    public static void executar(List<Participante> listaParticipantes, List<Prova> listaProvas, List<Questao> listaQuestoes, Scanner scanner){
+    public static void executar(List<Prova> listaProvas, List<Questao> listaQuestoes, Scanner scanner){
         Prova prova = new Prova(App.proximaProvaId, "Prova Seed");
         listaProvas.add(prova);
 
