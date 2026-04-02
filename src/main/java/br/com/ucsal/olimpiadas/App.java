@@ -34,7 +34,7 @@ public class App {
 		CadastroQuestao cadastroQuestao = new CadastroQuestaoMultiplaEscolha(questoes, provas, scanner);
 		AplicadorProva prova = new AplicadorProva(participantes, provas, questoes, tentativas, scanner);
 
-		ProvaSeed.executar(participantes, provas, questoes, scanner);
+		ProvaSeed.executar(provas, questoes, scanner);
 
 		while (true){
 			System.out.println("\n=== OLIMPÍADA DE QUESTÕES (V1) ===");
@@ -51,7 +51,7 @@ public class App {
 				case "2" -> cadastroProva.cadastrar();
 				case "3" -> cadastroQuestao.cadastrar();
 				case "4" -> prova.aplicar();
-				case "5" -> System.out.println("Listar tentativas");
+				case "5" -> Tentativa.listarTentativas(tentativas);
 				case "0" -> {
 					System.out.println("Aplicação Encerrada");
 					for(var p: provas){
